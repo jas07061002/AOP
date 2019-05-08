@@ -1,9 +1,10 @@
 package com.luv2code.aop;
 
+import java.util.List;
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.luv2code.aop.dao.AccountDAO;
-import com.luv2code.aop.dao.MembershipDAO;
 
 public class AfterReturningDemoApp {
 
@@ -16,28 +17,17 @@ public class AfterReturningDemoApp {
 		// get the bean from spring container
 		AccountDAO theAccountDAO = context.getBean("accountDAO",AccountDAO.class);
 		
-		// get membership bean from spring container
-		MembershipDAO theMembershipDAO = context.getBean("membershipDAO",MembershipDAO.class);
+		// call the method to find the accounts
+		List<Account> theAccounts = theAccountDAO.findAccounts();
 		
-		// call the business method
-		Account myAccount = new Account();
-		myAccount.setName("Madhu");
-		myAccount.setLevel("Platinum");
+		// display the accounts
+		System.out.println("\n\n Main Program : AfterReturningDemoApp");
+		System.out.println("----");
 		
-		theAccountDAO.addAccount(myAccount, true);
-		theAccountDAO.doWork();
+		System.out.println(theAccounts);
 		
-		String name = theAccountDAO.getName();
-		String code = theAccountDAO.getServiceCode();
-				
-				
-		// call the account dao getter/setter methods
-		theAccountDAO.setName("foobar");
-		theAccountDAO.setServiceCode("silver");
+		System.out.println("\n");
 		
-		// call the membership business method
-		theMembershipDAO.addSillyMember();
-		theMembershipDAO.goToSleep();
 		// close the context
 		context.close();
 	}
