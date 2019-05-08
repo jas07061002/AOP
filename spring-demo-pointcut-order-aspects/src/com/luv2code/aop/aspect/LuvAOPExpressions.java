@@ -23,5 +23,6 @@ public class LuvAOPExpressions {
 	@Pointcut("forDAOPackage() && !(getter() || setter())")
 	public void forDAOPackageNoGetterSetter() {}
 	
+	
 
 }
