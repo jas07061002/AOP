@@ -1,6 +1,7 @@
 package com.luv2code.aop.aspect;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,13 +22,15 @@ import com.luv2code.aop.Account;
 @Order(2)
 public class MyDemoLoggingAspect {
 	
+	private Logger myLogger = Logger.getLogger(getClass().getName());
+	
 	@Around("execution(* com.luv2code.aop.service.*.getFortune(..))")
 	public Object aroundGetFortune(ProceedingJoinPoint theProceedingJoinPoint)
 	throws Throwable
 	{
 		// print out the methods we are advising on
 		String method = theProceedingJoinPoint.getSignature().toShortString();
-		System.out.println("\n=======>>> Executing @Around on method: " + method);
+		myLogger.info("\n=======>>> Executing @Around on method: " + method);
 
 		// get begin timestamp
 		long begin = System.currentTimeMillis();
@@ -40,7 +43,7 @@ public class MyDemoLoggingAspect {
 		
 		// compute duration and display it
 		long duration = end - begin;
-		System.out.println("\n=====> Duration: " +duration/1000.0 + "seconds");
+		myLogger.info("\n=====> Duration: " +duration/1000.0 + "seconds");
 		
 		return result;
 	}
@@ -51,7 +54,7 @@ public class MyDemoLoggingAspect {
 
 		// print out which method we are advising
 		String method = theJoinPoint.getSignature().toShortString();
-		System.out.println("\n=======>>> Executing @After (finally) on method: " + method);
+		myLogger.info("\n=======>>> Executing @After (finally) on method: " + method);
 
 	}
 
@@ -60,10 +63,10 @@ public class MyDemoLoggingAspect {
 
 		// print out which method we are advising
 		String method = theJoinPoint.getSignature().toShortString();
-		System.out.println("\n=======>>> Executing @AfterThrowing on method: " + method);
+		myLogger.info("\n=======>>> Executing @AfterThrowing on method: " + method);
 
 		// log the exception
-		System.out.println("\n=======>>> The exception is: " + theExe);
+		myLogger.info("\n=======>>> The exception is: " + theExe);
 
 	}
 
@@ -72,17 +75,17 @@ public class MyDemoLoggingAspect {
 
 		// print out which method we are advising on
 		String method = theJoinPoint.getSignature().toShortString();
-		System.out.println("\n=======>>> Executing @AfterReturning on method: " + method);
+		myLogger.info("\n=======>>> Executing @AfterReturning on method: " + method);
 
 		// print out the results of the method call
-		System.out.println("\n=======>>> Result is: " + result);
+		myLogger.info("\n=======>>> Result is: " + result);
 
 		// let's post process data.. let's modify it
 
 		// convert the account names to uppercase
 		convertAccountNamesToUpperCase(result);
 
-		System.out.println("\n======>>> result is: " + result);
+		myLogger.info("\n======>>> result is: " + result);
 
 	}
 
@@ -102,12 +105,12 @@ public class MyDemoLoggingAspect {
 	@Before("com.luv2code.aop.aspect.LuvAOPExpressions.forDAOPackageNoGetterSetter()")
 	public void beforeAddAccountAdvice(JoinPoint theJoinPoint) {
 
-		System.out.println("\n====>>> Executing @Before advice on method");
+		myLogger.info("\n====>>> Executing @Before advice on method");
 
 		// display the method signature
 		MethodSignature methodSig = (MethodSignature) theJoinPoint.getSignature();
 
-		System.out.println("Method: " + methodSig);
+		myLogger.info("Method: " + methodSig);
 
 		// display method arguments
 
@@ -116,15 +119,15 @@ public class MyDemoLoggingAspect {
 
 		// loop through the args
 		for (Object tempArg : args) {
-			System.out.println(tempArg);
+			myLogger.info(tempArg.toString());
 
 			if (tempArg instanceof Account) {
 
 				// downcast and print account specific stuff
 				Account theAccount = (Account) tempArg;
 
-				System.out.println("account name: " + theAccount.getName());
-				System.out.println("account level: " + theAccount.getLevel());
+				myLogger.info("account name: " + theAccount.getName());
+				myLogger.info("account level: " + theAccount.getLevel());
 
 			}
 		}
